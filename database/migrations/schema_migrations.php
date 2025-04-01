@@ -1,0 +1,175 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+
+    public function up(): void
+    {
+
+        Schema::create('resorts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('location');
+            $table->text('location_coordinates');
+            $table->decimal('tax_rate', 5, 2);
+            $table->enum('status', ['active', 'deactivated'])->default('active');
+            $table->text('contact_details')->nullable();
+            $table->text('main_image')->nullable();
+            $table->text('image1')->nullable();
+            $table->text('image1_2')->nullable();
+            $table->text('image1_3')->nullable();
+            $table->text('image2')->nullable();
+            $table->text('image3')->nullable();
+            $table->text('resort_description')->nullable();
+            $table->text('amenities')->nullable();
+            $table->text('room_image_1')->nullable();
+            $table->text('room_image_2')->nullable();
+            $table->text('room_image_3')->nullable();
+            $table->text('room_description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('resort_events', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
+            $table->text('name');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->timestamps();
+        });
+
+        Schema::create('buildings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
+            $table->string('name');
+            $table->integer('floor_count');
+            $table->integer('room_per_floor');
+            $table->timestamps();
+        });
+
+        Schema::create('room_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->integer('capacity');
+            $table->decimal('base_price', 10, 2);
+            $table->timestamps();
+        });
+
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('building_id')->constrained('buildings')->onDelete('cascade');
+            $table->foreignId('room_type_id')->constrained('room_types');
+            $table->string('room_name')->nullable();
+            $table->string('room_image')->nullable();
+            $table->string('description')->nullable();
+            $table->string('inclusions', 2000)->nullable();
+            $table->string('amenities', 2000)->nullable();
+            $table->decimal('price_per_night', 10, 2);
+            $table->boolean('is_available')->default(true);
+            $table->timestamps();
+        });
+
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table
+                ->enum("role", [
+                    "super_admin",
+                    "resort_super_admin",
+                    "resort_admin",
+                    "guest",
+                ])
+                ->default("guest")
+                ->unique();
+            $table->text("description")->nullable();
+            $table->timestamps();
+        });
+
+        // Schema::create('permissions', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name')->unique();
+        //     $table->string('description')->unique();
+        //     $table->timestamps();
+        // });
+
+        // Schema::create('role_permission', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
+        //     $table->foreignId('permission_id')->constrained('permissions')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('username');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string("password");
+            $table->string("profile_photo")->nullable();
+            $table
+                ->enum("status", ["active", "deactivated"])
+                ->default("active");
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
+            $table->foreignId("resort_id")->nullable()->constrained("resorts")->onDelete("cascade");
+            $table->timestamps();
+        });
+
+        Schema::create('bookings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
+            $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
+            $table->date('check_in');
+            $table->date('check_out');
+            $table->decimal('sub-total', 8, 2)->nullable();
+            $table->decimal('total_amount', 8, 2);
+            $table->string('status')->default('Partially Paid');
+            $table->timestamps();
+        });
+
+        Schema::create('booking_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
+            $table->decimal('price_per_night', 10, 2);
+            $table->integer('nights');
+            $table->decimal('room_subtotal', 10, 2);
+            $table->decimal('discount', 10, 2)->default(0.00);
+            $table->decimal('tax', 10, 2)->default(0.00);
+            $table->decimal('final_price', 10, 2);
+            $table->timestamps();
+        });
+
+        // Schema::create('payments', function (Blueprint $table) {
+        //     $table->id();
+        //     // $table->foreignId('transaction_id')->constrained('transactions');
+        //     $table->enum('payment_method', ["Cash", "ECash" , "GCash"])->default('Cash');
+        //     $table->decimal('amount_paid', 10, 2);
+        //     $table->timestamps();
+        // });
+
+        // Schema::create('payment_submissions', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('payment_id')->constrained('payments');
+        //     $table->string("screenshot_path", 255);
+        //     $table->string('reference_number');
+        //     $table->string('status')->default('pending');
+        //     $table->timestamps();
+        // });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
