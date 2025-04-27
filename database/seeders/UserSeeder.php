@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         $initial_admins = [
             [
-                "username" => "Ocean View Super Admin",
+                "username" => "Ocean View ",
                 "email" => "oceanview.superadmin@gmail.com",
                 "password" => bcrypt(
                     "superadmin"
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
                 "status" => "active",
             ],
             [
-                "username" => "Punta Verde Super Admin",
+                "username" => "Punta Verde ",
                 "email" => "puntaverde.superadmin@gmail.com",
                 "password" => bcrypt(
                     "superadmin"
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 "status" => "active",
             ],
             [
-                "username" => "Bruzy Resort Super Admin",
+                "username" => "Bruzy Resort",
                 "email" => "bruzyresort.superadmin@gmail.com",
                 "password" => bcrypt(
                     "superadmin"
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
                 "username" => "Etriii",
                 "email" => "alexarnaizaparece@gmail.com",
                 "password" => bcrypt(
-                    "alexthegreat"
+                    "superadmin"
                 ),
                 "profile_photo" => null,
                 "status" => "active",

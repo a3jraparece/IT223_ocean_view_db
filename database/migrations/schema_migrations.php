@@ -134,7 +134,7 @@ return new class extends Migration
             $table->date('check_out');
             $table->decimal('sub-total', 8, 2)->nullable();
             $table->decimal('total_amount', 8, 2);
-            $table->string('status')->default('Partially Paid');
+            $table->enum('status', ['Pending', 'Confirmed', 'Cancelled', 'Paid', 'Completed',])->default('Pending');
             $table->timestamps();
         });
 
@@ -150,22 +150,40 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Schema::create('payments', function (Blueprint $table) {
-        //     $table->id();
-        //     // $table->foreignId('transaction_id')->constrained('transactions');
-        //     $table->enum('payment_method', ["Cash", "ECash" , "GCash"])->default('Cash');
-        //     $table->decimal('amount_paid', 10, 2);
-        //     $table->timestamps();
-        // });
+        Schema::create('payment_submissions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('booking_id')->constrained('bookings');
+            $table->string("screenshot_path", 255);
+            $table->decimal("amount_paid", 5, 2);
+            $table->string('reference_number');
+            $table->enum("status", ["pending", "approved", "rejected"])->default("pending");
+            $table->foreignId("reviewed_by")->nullable()
+                ->constrained("users")
+                ->onDelete("cascade");
+            $table->timestamp("reviewed_at")->nullable();
+            $table->timestamps();
+        });
 
-        // Schema::create('payment_submissions', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('payment_id')->constrained('payments');
-        //     $table->string("screenshot_path", 255);
-        //     $table->string('reference_number');
-        //     $table->string('status')->default('pending');
-        //     $table->timestamps();
-        // });
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('booking_id')->constrained('bookings');
+            $table->enum('payment_method', ["Cash", "ECash", "GCash"])->default('Cash');
+            $table->decimal('amount_paid', 10, 2);
+            $table->foreignId("received_by")->nullable()->constrained("users");
+            $table->foreignId("payment_submission_id")
+                ->nullable()
+                ->constrained("payment_submissions")
+                ->onDelete("cascade"); //if gcash gikan null lang if actual paymenyt
+            $table->timestamps();
+        });
+
+        Schema::create("notifications", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained()->onDelete("cascade");
+            $table->text("message");
+            $table->enum("status", ["unread", "read"])->default("unread");
+            $table->timestamps();
+        });
     }
 
     public function down(): void
