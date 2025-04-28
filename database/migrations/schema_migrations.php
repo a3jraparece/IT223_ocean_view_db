@@ -37,6 +37,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->text('name');
+            $table->string('image');
+            $table->decimal('discount_rate', 3, 2);
+            $table->string('description');
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
@@ -182,6 +185,45 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained()->onDelete("cascade");
             $table->text("message");
             $table->enum("status", ["unread", "read"])->default("unread");
+            $table->timestamps();
+        });
+
+        Schema::create("amenities_category", callback: function (Blueprint $table) {
+            $table->id();
+            $table->text("name");
+            $table->string("description");
+            $table->timestamps();
+        });
+
+        Schema::create("resort_amenities", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("resort_id")->constrained('resorts')->onDelete("cascade");
+            $table->foreignId("amenity_category_id")->constrained('amenities_category')->onDelete("cascade");
+            $table->text('amenity');
+            $table->timestamps();
+        });
+
+        Schema::create("bookmarks", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("resort_id")->constrained('resorts')->onDelete("cascade");
+            $table->foreignId("user_id")->constrained('users')->onDelete("cascade");
+            $table->timestamps();
+        });
+
+        Schema::create("reviews", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("resort_id")->constrained('resorts')->onDelete("cascade");
+            $table->foreignId("user_id")->constrained('users')->onDelete("cascade");
+            $table->enum('ratings', [1, 2, 3, 4, 5]);
+            $table->string('comments', 500);
+            $table->timestamps();
+        });
+
+        Schema::create("trigger_logs", function (Blueprint $table) {
+            $table->id();
+            $table->text('table');
+            $table->text('action');
+            $table->text('message');
             $table->timestamps();
         });
     }
