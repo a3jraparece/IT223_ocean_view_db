@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Buildings;
+use App\Models\Building;
 use App\Models\Resort;
 use App\Models\Room;
 use App\Models\RoomType;
@@ -16,7 +16,7 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $buildings = Buildings::all();
+        $buildings = Building::all();
         $room_types = RoomType::all();
 
         foreach ($buildings as $building) {

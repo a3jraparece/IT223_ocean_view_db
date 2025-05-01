@@ -25,7 +25,6 @@ return new class extends Migration
             $table->text('image2')->nullable();
             $table->text('image3')->nullable();
             $table->text('resort_description')->nullable();
-            $table->text('amenities')->nullable();
             $table->text('room_image_1')->nullable();
             $table->text('room_image_2')->nullable();
             $table->text('room_image_3')->nullable();
@@ -37,7 +36,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->text('name');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->decimal('discount_rate', 3, 2);
             $table->string('description');
             $table->date('start_date');
@@ -49,6 +48,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->string('name');
+            $table->string('image')->nullable();
             $table->integer('floor_count');
             $table->integer('room_per_floor');
             $table->timestamps();
@@ -224,8 +224,29 @@ return new class extends Migration
             $table->text('table');
             $table->text('action');
             $table->text('message');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::create("guest_details", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+        
+            $table->string('first_name', 50)->nullable();
+            $table->string('middle_name', 50)->nullable();
+            $table->string('sur_name', 50)->nullable();
+            $table->string('suffix', 10)->nullable();
+        
+            $table->string('region', 50)->nullable();
+            $table->string('province', 100)->nullable();
+            $table->string('city', 100)->nullable();
+        
+            $table->string('phone_number', 15)->nullable();
+            $table->boolean('status')->default(false);
+        
+            $table->timestamps();
+        });
+        
     }
 
     public function down(): void
