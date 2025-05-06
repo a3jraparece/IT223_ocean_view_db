@@ -12,12 +12,12 @@ return new class extends Migration
 
         Schema::create('resorts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('location');
             $table->text('location_coordinates');
             $table->decimal('tax_rate', 5, 2);
             $table->enum('status', ['active', 'deactivated'])->default('active');
-            $table->text('contact_details')->nullable();
+            $table->text('contact_details')->unique()->nullable();
             $table->text('main_image')->nullable();
             $table->text('image1')->nullable();
             $table->text('image1_2')->nullable();
@@ -122,7 +122,7 @@ return new class extends Migration
 
         Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->foreignId("resort_id")->nullable()->constrained("resorts")->onDelete("cascade");
             $table->timestamps();
@@ -131,13 +131,12 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
             $table->date('check_in');
             $table->date('check_out');
             $table->decimal('sub-total', 8, 2)->nullable();
             $table->decimal('total_amount', 8, 2);
-            $table->enum('status', ['Pending', 'Confirmed', 'Cancelled', 'Paid', 'Completed',])->default('Pending');
+            $table->enum('status', ['Pending', 'Confirmed', 'Cancelled', 'Completed',])->default('Pending');
             $table->timestamps();
         });
 
@@ -224,29 +223,34 @@ return new class extends Migration
             $table->text('table');
             $table->text('action');
             $table->text('message');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('triggered_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create("guest_details", function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
-        
+
             $table->string('first_name', 50)->nullable();
             $table->string('middle_name', 50)->nullable();
             $table->string('sur_name', 50)->nullable();
             $table->string('suffix', 10)->nullable();
-        
+
             $table->string('region', 50)->nullable();
             $table->string('province', 100)->nullable();
             $table->string('city', 100)->nullable();
-        
+
             $table->string('phone_number', 15)->nullable();
             $table->boolean('status')->default(false);
-        
+
             $table->timestamps();
         });
-        
+
+        Schema::create('logged_in_users', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamp('logged_in_at')->useCurrent();
+        });
     }
 
     public function down(): void
