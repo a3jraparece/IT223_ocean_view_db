@@ -4,25 +4,25 @@ use Illuminate\Support\Facades\DB;
 
 return function () {
 
-    DB::unprepared('
-    DROP TRIGGER IF EXISTS after_insert_bookmark;
+    // DB::unprepared('
+    // DROP TRIGGER IF EXISTS after_insert_bookmark;
 
-    CREATE TRIGGER after_insert_bookmark
-    AFTER INSERT ON bookmarks
-    FOR EACH ROW
-    BEGIN
-        INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
-        VALUES (
-            "bookmarks",
-            NEW.id,
-            "INSERT",
-            CONCAT("Bookmark for resort ID ", NEW.resort_id, " was added by user with ID ", NEW.user_id),
-            @user_id,
-            NOW(),
-            NOW()
-        );
-    END
-    ');
+    // CREATE TRIGGER after_insert_bookmark
+    // AFTER INSERT ON bookmarks
+    // FOR EACH ROW
+    // BEGIN
+    //     INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
+    //     VALUES (
+    //         "bookmarks",
+    //         NEW.id,
+    //         "INSERT",
+    //         CONCAT("Bookmark for resort ID ", NEW.resort_id, " was added by user with ID ", NEW.user_id),
+    //         @user_id,
+    //         NOW(),
+    //         NOW()
+    //     );
+    // END
+    // ');
 
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_update_bookmark;

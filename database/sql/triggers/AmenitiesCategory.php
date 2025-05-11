@@ -4,25 +4,25 @@ use Illuminate\Support\Facades\DB;
 
 return function () {
 
-    DB::unprepared('
-    DROP TRIGGER IF EXISTS after_insert_amenities_category;
+    // DB::unprepared('
+    // DROP TRIGGER IF EXISTS after_insert_amenities_category;
 
-    CREATE TRIGGER after_insert_amenities_category
-    AFTER INSERT ON amenities_category
-    FOR EACH ROW
-    BEGIN
-        INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
-        VALUES (
-            "amenities_category",
-            NEW.id,
-            "INSERT",
-            CONCAT("Amenity category ", NEW.name, " was added with ID ", NEW.id),
-            @user_id,
-            NOW(),
-            NOW()
-        );
-    END
-    ');
+    // CREATE TRIGGER after_insert_amenities_category
+    // AFTER INSERT ON amenities_category
+    // FOR EACH ROW
+    // BEGIN
+    //     INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
+    //     VALUES (
+    //         "amenities_category",
+    //         NEW.id,
+    //         "INSERT",
+    //         CONCAT("Amenity category ", NEW.name, " was added with ID ", NEW.id),
+    //         @user_id,
+    //         NOW(),
+    //         NOW()
+    //     );
+    // END
+    // ');
 
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_update_amenities_category;
