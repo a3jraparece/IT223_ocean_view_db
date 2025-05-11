@@ -221,6 +221,7 @@ return new class extends Migration
         Schema::create("trigger_logs", function (Blueprint $table) {
             $table->id();
             $table->text('table');
+            $table->unsignedBigInteger('affected_id')->nullable();
             $table->text('action');
             $table->text('message');
             $table->foreignId('triggered_by')->nullable()->constrained('users')->onDelete('cascade');

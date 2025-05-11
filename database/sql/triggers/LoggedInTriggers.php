@@ -16,8 +16,8 @@ return function () {
         SET current_user_id = NEW.user_id;
 
         IF current_user_id IS NOT NULL THEN
-            INSERT INTO trigger_logs (`table`, `action`, `message`,`triggered_by` ,`created_at`)
-            VALUES ("logged_in_users", "LOGIN", CONCAT("User ", current_user_id, " logged in"), current_user_id ,NOW());
+            INSERT INTO trigger_logs (`table`, `affected_id`,`action`, `message`,`triggered_by` ,`created_at`)
+            VALUES ("logged_in_users", current_user_id,"LOGIN", CONCAT("User ", current_user_id, " logged in"), current_user_id ,NOW());
         END IF;
     END
     ');
@@ -34,11 +34,10 @@ return function () {
         SET current_user_id = OLD.user_id;
 
         IF current_user_id IS NOT NULL THEN
-            INSERT INTO trigger_logs (`table`, `action`, `message`, `triggered_by`, `created_at`)
-            VALUES ("logged_in_users", "LOGOUT", CONCAT("User ", current_user_id, " logged out"), current_user_id , NOW());
+            INSERT INTO trigger_logs (`table`, `affected_id`,`action`, `message`, `triggered_by`, `created_at`)
+            VALUES ("logged_in_users", current_user_id, "LOGOUT", CONCAT("User ", current_user_id, " logged out"), current_user_id , NOW());
         END IF;
     END
     ');
 
-    
 };
