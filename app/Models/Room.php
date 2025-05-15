@@ -21,4 +21,14 @@ class Room extends Model
         'price_per_night',
         'is_available',
     ];
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

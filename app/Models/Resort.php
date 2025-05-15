@@ -10,7 +10,7 @@ class Resort extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 
+        'name',
         'location',
         'location_coordinates',
         'tax_rate',
@@ -30,4 +30,9 @@ class Resort extends Model
         'room_image_3',
         'room_description',
     ];
+
+    public function buildings()
+    {
+        return $this->hasMany(Building::class);
+    }
 }

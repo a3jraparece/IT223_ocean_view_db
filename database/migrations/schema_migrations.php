@@ -66,6 +66,7 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('building_id')->constrained('buildings')->onDelete('cascade');
+            $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->foreignId('room_type_id')->constrained('room_types');
             $table->string('room_name')->nullable();
             $table->string('room_image')->nullable();

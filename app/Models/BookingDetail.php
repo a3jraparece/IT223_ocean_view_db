@@ -20,4 +20,9 @@ class BookingDetail extends Model
         'tax',
         'final_price',
     ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 }

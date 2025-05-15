@@ -4,25 +4,25 @@ use Illuminate\Support\Facades\DB;
 
 return function () {
 
-    // DB::unprepared('
-    // DROP TRIGGER IF EXISTS after_insert_building;
+    DB::unprepared('
+    DROP TRIGGER IF EXISTS after_insert_building;
 
-    // CREATE TRIGGER after_insert_building
-    // AFTER INSERT ON buildings
-    // FOR EACH ROW
-    // BEGIN
-    //     INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
-    //     VALUES (
-    //         "buildings",
-    //         NEW.id,
-    //         "INSERT",
-    //         CONCAT("Building ", NEW.name, " was added with ID ", NEW.id),
-    //         @user_id,
-    //         NOW(),
-    //         NOW()
-    //     );
-    // END
-    // ');
+    CREATE TRIGGER after_insert_building
+    AFTER INSERT ON buildings
+    FOR EACH ROW
+    BEGIN
+        INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
+        VALUES (
+            "buildings",
+            NEW.id,
+            "INSERT",
+            CONCAT("Building ", NEW.name, " was added with ID ", NEW.id),
+            @user_id,
+            NOW(),
+            NOW()
+        );
+    END
+    ');
 
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_update_building;

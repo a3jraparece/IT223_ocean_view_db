@@ -16,7 +16,8 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $buildings = Building::all();
+        // $buildings = Building::all();
+        $buildings = Building::with('resort')->get();
         $room_types = RoomType::all();
 
         foreach ($buildings as $building) {
@@ -29,6 +30,7 @@ class RoomSeeder extends Seeder
                     Room::create(
                         [
                             'building_id' => $building['id'],
+                            'resort_id' => $building['resort']['id'],
                             'room_type_id' => $random_room_type->id,
                             'room_name' =>  $this->getAcronym($building['name']) . ' ' . $i . '-' . $j,
                             'room_image' => null,

@@ -7,6 +7,10 @@ return function () {
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_insert_resort;
 
+        IF @user_id IS NULL THEN
+            SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+        END IF;
+
     CREATE TRIGGER after_insert_resort
     AFTER INSERT ON resorts
     FOR EACH ROW

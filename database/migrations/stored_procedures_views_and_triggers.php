@@ -7,6 +7,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        $this->runSqlFiles(database_path('sql/views'));
         $this->runSqlFiles(database_path('sql/procedures'));
         $this->runSqlFiles(database_path('sql/triggers'));
     }

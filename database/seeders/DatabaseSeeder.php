@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\AmenityCategory;
 use App\Models\GuestDetail;
 use App\Models\RoomType;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             BookmarkSeeder::class,
             ReviewSeeder::class,
             GuestDetailSeeder::class,
+            BookingSeeder::class,
         ]);
     }
 }
