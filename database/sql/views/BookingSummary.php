@@ -23,9 +23,10 @@ return function () {
         bd.discount,
         bd.tax,
         bd.final_price,
+        r.resort_id,
         b.created_at
     FROM
-        bookings b
+    bookings b
     JOIN users u ON b.user_id = u.id
     JOIN rooms r ON b.room_id = r.id
     JOIN booking_details bd ON b.id = bd.booking_id;

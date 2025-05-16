@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ReviewSeeder::class,
             GuestDetailSeeder::class,
             BookingSeeder::class,
+            UpdateBookingAndPaymentSeeder::class,
         ]);
     }
 }
