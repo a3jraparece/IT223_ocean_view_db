@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Booking;
 use App\Models\Payment;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UpdateBookingAndPaymentSeeder extends Seeder
@@ -34,5 +35,11 @@ class UpdateBookingAndPaymentSeeder extends Seeder
                 $booking->save();
             }
         }
+
+        $date = Carbon::today()->format('Y-m-d');
+
+        Booking::where('check_out', '<=', $date)
+            ->where('status', '!=', 'Completed')
+            ->update(['status' => 'Completed']);
     }
 }

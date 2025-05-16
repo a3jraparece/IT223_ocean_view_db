@@ -239,7 +239,7 @@ class BookingSeeder extends Seeder
     public function run()
     {
         $pricePerNight = 7000;
-        $startRange = Carbon::now();//->subMonth()
+        $startRange = Carbon::now()->subWeeks(2); //->subMonth()
         $endRange = Carbon::now()->addMonth();
 
         // Users with role_id = 4
