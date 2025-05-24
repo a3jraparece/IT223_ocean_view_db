@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\DB;
 return function () {
 
     DB::unprepared('
-    DROP VIEW IF EXISTS booking_full_summary;
+    DROP VIEW IF EXISTS booking_full_summarry;
 
-    CREATE VIEW booking_full_summary AS
+    CREATE VIEW booking_full_summarry AS
     SELECT
         b.id AS booking_id,
         u.username AS user_name,
