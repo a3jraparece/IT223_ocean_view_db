@@ -225,7 +225,8 @@ return new class extends Migration
             $table->unsignedBigInteger('affected_id')->nullable();
             $table->text('action');
             $table->text('message');
-            $table->foreignId('triggered_by')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('triggered_by')->default(1)->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('resort_id')->nullable()->constrained('resorts')->onDelete('cascade');
             $table->timestamps();
         });
 

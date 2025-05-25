@@ -4,29 +4,29 @@ use Illuminate\Support\Facades\DB;
 
 return function () {
 
-    // DB::unprepared('
-    // DROP TRIGGER IF EXISTS after_insert_guest_details;
+    DB::unprepared('
+    DROP TRIGGER IF EXISTS after_insert_guest_details;
     
-    //     IF @user_id IS NULL THEN
-    //         SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
-    //     END IF;
+        IF @user_id IS NULL THEN
+            SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+        END IF;
 
-    // CREATE TRIGGER after_insert_guest_details
-    // AFTER INSERT ON guest_details
-    // FOR EACH ROW
-    // BEGIN
-    //     INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
-    //     VALUES (
-    //         "guest_details",
-    //         NEW.id,
-    //         "INSERT",
-    //         COALESCE(CONCAT("Guest details for user ID ", NEW.user_id, " were added with first name ", NEW.first_name), "Default message: Guest details added"),
-    //         @user_id,
-    //         NOW(),
-    //         NOW()
-    //     );
-    // END
-    // ');
+    CREATE TRIGGER after_insert_guest_details
+    AFTER INSERT ON guest_details
+    FOR EACH ROW
+    BEGIN
+        INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
+        VALUES (
+            "guest_details",
+            NEW.id,
+            "INSERT",
+            COALESCE(CONCAT("Guest details for user ID ", NEW.user_id, " were added with first name ", NEW.first_name), "Default message: Guest details added"),
+            @user_id,
+            NOW(),
+            NOW()
+        );
+    END
+    ');
 
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_update_guest_details;
@@ -36,6 +36,10 @@ return function () {
     FOR EACH ROW
     BEGIN
         DECLARE msg TEXT DEFAULT "";
+
+        IF @user_id IS NULL THEN
+    SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+    END IF;
 
         IF NOT OLD.first_name <=> NEW.first_name THEN
             SET msg = CONCAT(msg, "first name changed from \'", OLD.first_name, "\' to \'", NEW.first_name, "\'; ");

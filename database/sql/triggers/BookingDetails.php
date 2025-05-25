@@ -12,6 +12,9 @@ return function () {
     AFTER INSERT ON booking_details
     FOR EACH ROW
     BEGIN
+    IF @user_id IS NULL THEN
+    SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+    END IF;
         INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
         VALUES (
             "booking_details",

@@ -4,28 +4,35 @@ use Illuminate\Support\Facades\DB;
 
 return function () {
 
-    // DB::unprepared('
-    // DROP TRIGGER IF EXISTS after_insert_amenities_category;
+    DB::unprepared('
+    DROP TRIGGER IF EXISTS after_insert_amenities_category;
 
-    // CREATE TRIGGER after_insert_amenities_category
-    // AFTER INSERT ON amenities_category
-    // FOR EACH ROW
-    // BEGIN
-    //     INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
-    //     VALUES (
-    //         "amenities_category",
-    //         NEW.id,
-    //         "INSERT",
-    //         CONCAT("Amenity category ", NEW.name, " was added with ID ", NEW.id),
-    //         @user_id,
-    //         NOW(),
-    //         NOW()
-    //     );
-    // END
-    // ');
+    CREATE TRIGGER after_insert_amenities_category
+    AFTER INSERT ON amenities_category
+    FOR EACH ROW
+    BEGIN
+    IF @user_id IS NULL THEN
+    SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+    END IF;
+        INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `created_at`, `updated_at`)
+        VALUES (
+            "amenities_category",
+            NEW.id,
+            "INSERT",
+            CONCAT("Amenity category ", NEW.name, " was added with ID ", NEW.id),
+            @user_id,
+            NOW(),
+            NOW()
+        );
+    END
+    ');
 
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_update_amenities_category;
+
+    IF @user_id IS NULL THEN
+    SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+    END IF;
 
     CREATE TRIGGER after_update_amenities_category
     AFTER UPDATE ON amenities_category
@@ -58,6 +65,10 @@ return function () {
     DB::unprepared('
     DROP TRIGGER IF EXISTS after_delete_amenities_category;
 
+    IF @user_id IS NULL THEN
+    SET @user_id = 1;  -- Default user ID (you can choose a default user ID here)
+    END IF;
+
     CREATE TRIGGER after_delete_amenities_category
     AFTER DELETE ON amenities_category
     FOR EACH ROW
@@ -74,5 +85,4 @@ return function () {
         );
     END
     ');
-
 };
