@@ -35,7 +35,7 @@ class BuildingSeeder extends Seeder
         $resorts = Resort::all();
 
         foreach ($resorts as $resort) {
-            $building_count = random_int(1, 3);
+            $building_count = random_int(2, 4);
             Building::factory($building_count)->create(
                 ['resort_id' => $resort['id']]
             );

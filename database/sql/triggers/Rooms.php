@@ -95,14 +95,36 @@ use Illuminate\Support\Facades\DB;
 //     //     );
 //     // END
 //     // ');
-    
-    
+
+
 // };
 
 return function () {
     // Drop existing triggers if any
     DB::unprepared('DROP TRIGGER IF EXISTS after_update_room;');
     DB::unprepared('DROP TRIGGER IF EXISTS after_delete_room;');
+
+    DB::unprepared('
+        DROP TRIGGER IF EXISTS after_insert_room;
+
+        CREATE TRIGGER after_insert_room
+        AFTER INSERT ON rooms
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO trigger_logs (`table`, `affected_id`, `action`, `message`, `triggered_by`, `resort_id`, `created_at`, `updated_at`)
+            VALUES (
+                "rooms",
+                NEW.id,
+                "INSERT",
+                CONCAT("Room ", NEW.room_name, " was added with ID ", NEW.id),
+                @user_id,
+                NEW.resort_id,
+                NOW(),
+                NOW()
+            );
+        END
+        ');
+
 
     // Create after_update_room trigger
     DB::unprepared('

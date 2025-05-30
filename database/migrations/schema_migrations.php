@@ -48,7 +48,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->string('name');
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->integer('floor_count');
             $table->integer('room_per_floor');
             $table->timestamps();
@@ -69,7 +69,7 @@ return new class extends Migration
             $table->foreignId('resort_id')->constrained('resorts')->onDelete('cascade');
             $table->foreignId('room_type_id')->constrained('room_types');
             $table->string('room_name')->nullable();
-            $table->string('room_image')->nullable();
+            $table->text('room_image')->nullable();
             $table->string('description')->nullable();
             $table->string('inclusions', 2000)->nullable();
             $table->string('amenities', 2000)->nullable();
@@ -157,7 +157,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('booking_id')->constrained('bookings');
             $table->string("screenshot_path", 255);
-            $table->decimal("amount_paid", 5, 2);
+            $table->decimal("amount_paid", 10, 2);
             $table->string('reference_number');
             $table->enum("status", ["pending", "approved", "rejected"])->default("pending");
             $table->foreignId("reviewed_by")->nullable()
